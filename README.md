@@ -12,11 +12,11 @@
 - `requirements.txt` 記載のライブラリ
 
 ### 導入方法
-- `$ git clone https://github.com/iamtakagi/radio.discord.git`: リポジトリをローカルにクローン
+- `$ git clone https://github.com/iamtakagi/radio.discord.git` リポジトリをローカルにクローン
 
-- `$ pip install -r requirements.txt`: 必要な pip ライブラリのインストール
+- `$ pip install -r requirements.txt` 必要な pip ライブラリのインストール
 
-- `$ python app.py`: 起動
+- `$ python app.py` 起動
 
 ## Docker を使ってインストールする場合
 - `app.env.sample` を `app.env` として適宣書き換え
