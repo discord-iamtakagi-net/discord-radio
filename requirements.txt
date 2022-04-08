@@ -1,0 +1,4 @@
+requests
+discord.py[voice]
+discord-py-slash-command
+asyncio
