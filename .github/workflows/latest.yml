@@ -45,6 +45,6 @@ jobs:
           DOCKER_BUILDKIT: 1
         with:
           push: true
-          tags: ${{ env.DOCKER_IMAGE_NAME }}:latest
-          cache-from: ${{ env.DOCKER_IMAGE_NAME }}:latest
+          tags: ${{ env.DOCKER_REGISTRY_NAME }}/${{ env.DOCKER_IMAGE_NAME }}:latest
+          cache-from: ${{ env.DOCKER_REGISTRY_NAME }}/${{ env.DOCKER_IMAGE_NAME }}:latest
           build-args: BUILDKIT_INLINE_CACHE=1
