@@ -12,8 +12,7 @@
 
 - `$ docker login ghcr.io`
 
-- `docker-compose.yml` を作成
-`docker-compose.yml`
+- `docker-compose.yml` 作成
 ```yml
 version: '3'
 
