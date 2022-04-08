@@ -1,8 +1,10 @@
 # radio.discord
-*動作不安定 (α) それなりに動作するとは思いますが、局変更時の処理がイマイチ不安定です。\
+[![latest](https://github.com/iamtakagi/radio.discord/actions/workflows/latest.yml/badge.svg)](https://github.com/iamtakagi/radio.discord/actions/workflows/latest.yml)
+
+*動作不安定 (α) それなりに動作しますが、局変更時の処理がイマイチ不安定です。\
 前提として、radiko のプレミアム会員アカウントが必要です。
 
-## 前提 (Docker を使わず動かす場合)
+## 前提 (Docker を使わずインストールする場合)
 - `FFmpeg 4.2.4`
 - `Python 3.10`
 - `requirements.txt` 記載のライブラリ
