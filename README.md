@@ -8,11 +8,11 @@
 - `requirements.txt` 記載のライブラリ
 
 ## インストール (Docker)
-- 1. `app.env.sample` を `app.env` として適宣書き換え
+- `app.env.sample` を `app.env` として適宣書き換え
 
-- 2. `$ docker login ghcr.io`
+- `$ docker login ghcr.io`
 
-- 3. `docker-compose.yml` を作成
+- `docker-compose.yml` を作成
 `docker-compose.yml`
 ```yml
 version: '3'
@@ -25,7 +25,7 @@ services:
     restart: unless-stopped
 ```
 
-- 4. `$ docker-compose up -d` 
+- `$ docker-compose up -d` 
 
 ## LICENSE
 MIT License.
