@@ -33,7 +33,7 @@ services:
     image: ghcr.io/iamtakagi/radio.discord:latest
     env_file: 
       - .env
-    restart: unless-stopped
+    restart: always
 ```
 
 - `$ docker-compose up -d` 
