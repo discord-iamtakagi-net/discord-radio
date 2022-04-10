@@ -19,7 +19,7 @@
 - `$ python app.py` 起動
 
 ## Docker を使ってインストールする場合
-- `app.env.sample` を `app.env` として適宣書き換え
+- `.env.sample` 適宣書き換え
 
 - `$ docker login ghcr.io`
 
@@ -30,8 +30,9 @@ version: '3'
 services:
   app:
     container_name: app
-    image: ghcr.io/iamtakagi/radio.discord
-    env_file: app.env
+    image: ghcr.io/iamtakagi/radio.discord:latest
+    env_file: 
+      - .env
     restart: unless-stopped
 ```
 
