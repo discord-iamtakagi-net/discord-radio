@@ -57,7 +57,7 @@ async def on_command(ctx: SlashContext, station_id: str):
     global radio_stream
     if env.STATION_ID not in radio_stream.radiko.stations:
         return await ctx.send(
-            content="存在しないラジオ局名です",
+            content="存在しない放送局名です",
             hidden=True
         )
     station_name = radio_stream.radiko.stations[station_id][0]
@@ -69,14 +69,14 @@ async def on_command(ctx: SlashContext, station_id: str):
             await member.edit(nick=station_name)      
         except Exception as e:
             print(e)
+        await ctx.send(
+            content="局を変更しました `{}` {}".format(station_id, station_name),
+            hidden=True
+        )
         await radio_stream.disconnect()
         await radio_stream.connect()
         radio_stream.station_id = station_id
         await radio_stream.start()
-        await ctx.send(
-            content="ラジオ局を変更しました: {}".format(station_id),
-            hidden=True
-        )
     else:
         await ctx.send(
             content="エラーが発生しました",

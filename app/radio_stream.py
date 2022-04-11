@@ -57,7 +57,8 @@ class RadioStream():
                 source.cleanup()
                 p.kill()
             
-            self.voice_client.play(source, after=lambda _: endStream())
+            if self.voice_client and not self.voice_client.is_playing():
+                self.voice_client.play(source, after=lambda _: endStream())
             logger.debug('started subprocess: group id {}'.format(os.getpgid(p.pid)))
 
             await asyncio.sleep(10) # 10秒起きにループ
