@@ -1,3 +1,4 @@
+import json
 from radio_stream import RadioStream
 from radiko import Radiko
 
@@ -13,11 +14,13 @@ env: Env
 client = commands.Bot(command_prefix='!', intents=Intents.all())
 command = SlashCommand(client, sync_commands=True)
 env = Env.load()
+radiko: Radiko
 radio_stream: RadioStream
 
 @client.event
 async def on_ready():
     print(f"[radiko.discord] {client.user} として起動しました")
+    global radiko
     radiko = Radiko(acct={'mail': env.RADIKO_MAIL, 'pass': env.RADIKO_PASS})
     if env.STATION_ID not in radiko.stations:
         return
@@ -25,41 +28,21 @@ async def on_ready():
     await client.change_presence(activity=Game(name=station_name))
     voice_channel = client.get_channel(env.VOICE_CHANNEL_ID)
     global radio_stream
-    radio_stream = RadioStream(client=client, radiko=radiko, voice_channel=voice_channel, stataion_id=env.STATION_ID)
     if voice_channel:
+        radio_stream = RadioStream(client=client, radiko=radiko, voice_channel=voice_channel, stataion_id=env.STATION_ID)
         try:
             member = voice_channel.guild.get_member(client.user.id)
             await member.edit(nick=station_name)      
         except Exception as e:
             print(e)
-        radio_stream.voice_client = await voice_channel.connect()
-
-@command.slash(name='radio', description='ラジオを流します')
-async def on_command(ctx: SlashContext):
-    if not ctx.guild:
-        return await ctx.send(
-            content="このコマンドは DM で使用できません",
-            hidden=True
-        )
-    global radio_stream
-    voice_channel = client.get_channel(env.VOICE_CHANNEL_ID)
-    if voice_channel:
-        await ctx.send(
-            content="ラジオのストリーミングを開始しました",
-            hidden=True
-        )
-        radio_stream.start()
-    else:
-        await ctx.send(
-            content="エラーが発生しました",
-            hidden=True
-        )
+        await radio_stream.connect()
+        await radio_stream.start()
 
 
-@command.slash(name='radiosel', description='ラジオ選局', options = [
+@command.slash(name='radio', description='選局', options = [
         create_option(
             name="station_id",
-            description="ラジオ局ID",
+            description="局ID",
             option_type=str,
             required=True,
         ),
@@ -86,15 +69,38 @@ async def on_command(ctx: SlashContext, station_id: str):
             await member.edit(nick=station_name)      
         except Exception as e:
             print(e)
+        await radio_stream.disconnect()
+        await radio_stream.connect()
+        radio_stream.station_id = station_id
+        await radio_stream.start()
         await ctx.send(
             content="ラジオ局を変更しました: {}".format(station_id),
             hidden=True
         )
-        radio_stream.next_station_id = station_id
     else:
         await ctx.send(
             content="エラーが発生しました",
             hidden=True
         )
+
+@command.slash(name='radiolist', description='局リスト')
+async def on_command(ctx: SlashContext):
+    if not ctx.guild:
+        return await ctx.send(
+            content="このコマンドは DM で使用できません",
+            hidden=True
+        )
+    global radiko
+    text = ""
+    template = "`{}` {}\n"
+
+    for station_id in radiko.stations:
+        station = radiko.stations[station_id]
+        station_name = station[0]
+        text+= template.format(station_id, station_name)
+    return await ctx.send(
+            content=text,
+            hidden=True
+    )
 
 client.run(env.BOT_TOKEN)

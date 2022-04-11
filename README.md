@@ -1,8 +1,10 @@
 # radio.discord
 [![latest](https://github.com/iamtakagi/radio.discord/actions/workflows/latest.yml/badge.svg)](https://github.com/iamtakagi/radio.discord/actions/workflows/latest.yml)
 
-*動作不安定 (α) それなりに動作しますが、局変更時の処理がイマイチ不安定です。\
 前提として、radiko のプレミアム会員アカウントが必要です。
+
+- `/radio <station_id>`: 選局コマンド
+- `/radiolist`: 局リスト
 
 ## Install (Basic)
 

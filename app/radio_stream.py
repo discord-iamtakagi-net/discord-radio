@@ -1,4 +1,5 @@
 import asyncio
+
 from logger import logger
 import os
 
@@ -16,8 +17,8 @@ class RadioStream():
     client: commands.Bot
     voice_client: VoiceClient
     voice_channel: VoiceChannel
-    current_station_id: str
-    next_station_id: str = None
+    station_id: str
+    stream_task: asyncio.Task
 
     def __init__(
         self,
@@ -28,16 +29,21 @@ class RadioStream():
         self.client = client
         self.radiko = radiko
         self.voice_channel = voice_channel
-        self.current_station_id = stataion_id
+        self.station_id = stataion_id
     
-
     def getStreamUrl(self):
-        return 'http://f-radiko.smartstream.ne.jp/{}/_definst_/simul-stream.stream/playlist.m3u8'.format(self.current_station_id)
-         
+        return 'http://f-radiko.smartstream.ne.jp/{}/_definst_/simul-stream.stream/playlist.m3u8'.format(self.station_id)
+    
+    async def connect(self):
+        self.voice_client = await self.voice_channel.connect()
+    
+    async def disconnect(self):
+        await self.voice_client.disconnect()
+        self.voice_client = None
 
-    def start(self):
-        self.client.loop.create_task(self.playRadioStream())
-
+    async def start(self):
+        self.stream_task = self.client.loop.create_task(self.playRadioStream())
+        await self.stream_task
 
     async def playRadioStream(self):
         while self.client.loop.is_running():
@@ -46,20 +52,12 @@ class RadioStream():
             p = Popen("ffmpeg -y -vn -headers 'X-Radiko-AuthToken: {}' -i '{}' -acodec copy -f adts -loglevel error /dev/stdout".format(Radiko.token, url), 
                 shell=True, stdout=PIPE, stderr=STDOUT, preexec_fn=os.setsid)
             source = PCMVolumeTransformer(FFmpegPCMAudio(p.stdout, pipe=True), volume=1.0)
+
             def endStream():
                 source.cleanup()
                 p.kill()
-
-            if self.next_station_id is not None and self.next_station_id != self.current_station_id:
-                self.current_station_id = self.next_station_id
-                self.next_station_id = None
-                source.cleanup()
-                # VC 切断
-                await self.voice_client.disconnect()
-                # VC 再接続
-                self.voice_client = await self.voice_channel.connect()      
-            else:
-                self.voice_client.play(source, after=lambda _: endStream())
-                logger.debug('started subprocess: group id {}'.format(os.getpgid(p.pid)))
+            
+            self.voice_client.play(source, after=lambda _: endStream())
+            logger.debug('started subprocess: group id {}'.format(os.getpgid(p.pid)))
 
             await asyncio.sleep(10) # 10秒起きにループ
