@@ -40,7 +40,7 @@ services:
 
 - `$ docker-compose up -d` 
 
-### Updates
+### If you need to update the Docker Image
 `$ docker pull ghcr.io/iamtakagi/radio.discord`
 
 ## LICENSE
