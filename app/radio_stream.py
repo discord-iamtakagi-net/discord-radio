@@ -49,16 +49,13 @@ class RadioStream():
         while self.client.loop.is_running():
 
             url = self.radiko.gen_temp_chunk_m3u8_url(self.getStreamUrl(), Radiko.token)
-            p = Popen("ffmpeg -y -vn -headers 'X-Radiko-AuthToken: {}' -i '{}' -acodec copy -f adts -loglevel error /dev/stdout".format(Radiko.token, url), 
+            p =  Popen("ffmpeg -y -vn -headers 'X-Radiko-AuthToken: {}' -i '{}' -acodec copy -f adts -loglevel error /dev/stdout".format(Radiko.token, url), 
                 shell=True, stdout=PIPE, stderr=STDOUT, preexec_fn=os.setsid)
             source = PCMVolumeTransformer(FFmpegPCMAudio(p.stdout, pipe=True), volume=1.0)
-
-            def endStream():
-                source.cleanup()
-                p.kill()
             
             if self.voice_client and not self.voice_client.is_playing():
-                self.voice_client.play(source, after=lambda _: endStream())
+                self.voice_client.play(source, after=lambda _: p.kill())
+            
             logger.debug('started subprocess: group id {}'.format(os.getpgid(p.pid)))
 
             await asyncio.sleep(10) # 10秒起きにループ
