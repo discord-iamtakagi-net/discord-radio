@@ -57,8 +57,7 @@ class RadioStream():
             source = PCMVolumeTransformer(
                 FFmpegPCMAudio(p.stdout, pipe=True), volume=1.0)
 
-            if self.voice_client and not self.voice_client.is_playing():
-                self.voice_client.play(source, after=lambda _: p.kill())
+            self.voice_client.play(source, after=lambda _: p.kill())
 
             logger.debug(
                 'started subprocess: group id {}'.format(os.getpgid(p.pid)))
