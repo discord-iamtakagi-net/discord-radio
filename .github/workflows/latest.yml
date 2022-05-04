@@ -20,7 +20,7 @@ on:
 
 env:
   DOCKER_REGISTRY_NAME: ghcr.io
-  DOCKER_IMAGE_NAME: ${{ github.repository }} # iamtakagi/radio.discord
+  DOCKER_IMAGE_NAME: ${{ github.repository }} # discord-iamtakagi-net/radio.discord
 
 jobs:
   build:
