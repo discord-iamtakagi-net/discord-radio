@@ -32,7 +32,7 @@ version: '3'
 services:
   app:
     container_name: app
-    image: ghcr.io/discord-iamtakagi-net/radio.discord:latest
+    image: ghcr.io/discord-iamtakagi-net/discord-radio:latest
     env_file: 
       - .env
     restart: always
