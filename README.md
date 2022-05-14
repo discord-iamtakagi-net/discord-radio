@@ -1,4 +1,4 @@
-# radio-discord
+# discord-radio
 [![latest](https://github.com/iamtakagi/radio.discord/actions/workflows/latest.yml/badge.svg)](https://github.com/iamtakagi/radio.discord/actions/workflows/latest.yml)
 
 前提として、radiko のプレミアム会員アカウントが必要です。
