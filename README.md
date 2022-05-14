@@ -14,7 +14,7 @@ version: '3'
 
 services:
   app:
-    container_name: app
+    container_name: discord-radio
     image: ghcr.io/discord-iamtakagi-net/discord-radio:latest
     env_file: 
       - .env
